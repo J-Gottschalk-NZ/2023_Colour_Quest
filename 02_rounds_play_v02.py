@@ -8,10 +8,8 @@ class ChooseRounds:
         button_fg = "#FFFFFF"
         button_font = ("Arial", "13", "bold")
 
-        self.rounds_box = Toplevel()
-
         # Set up GUI Frame
-        self.intro_frame = Frame(self.rounds_box, padx=10, pady=10)
+        self.intro_frame = Frame(padx=10, pady=10)
         self.intro_frame.grid()
 
         # heading and brief instructions
@@ -47,7 +45,9 @@ class ChooseRounds:
 
     def to_play(self, num_rounds):
         Play(num_rounds)
-        self.rounds_box.withdraw()
+
+        # Hide root window (ie: hide rounds choice window).
+        root.withdraw()
 
 
 class Play:
@@ -68,7 +68,9 @@ class Play:
         self.start_over_button.grid(row=0, column=2)
 
     def close_play(self):
-        ChooseRounds()
+        # reshow root (ie: choose rounds) and end current
+        # game / allow new game to start
+        root.deiconify()
         self.play_box.destroy()
 
 
