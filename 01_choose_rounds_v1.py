@@ -13,18 +13,22 @@ class ChooseRounds:
         self.intro_frame.grid()
 
         # heading and brief instructions
-        self.intro_heading_label = Label(self.intro_frame, text="Colour Quest",
+        self.intro_heading_label = Label(self.intro_frame,
+                                         text="Colour Quest",
                                          font=("Arial", "16", "bold"))
         self.intro_heading_label.grid(row=0)
 
-        choose_instructions_txt = "In each round you will be given six different " \
-                                  "colours to choose from.  Pick a colour and see if " \
-                                  "you can beat the computer's score!\n\n" \
-                                  "To begin, choose how many rounds you'd like to " \
-                                  "play..."
+        choose_instructions_txt = "In each round you will be given " \
+                                  "six different colours to choose " \
+                                  "from.  Pick a colour and see if " \
+                                  "you can beat the computer's " \
+                                  "score!\n\n" \
+                                  "To begin, choose how many rounds " \
+                                  "you'd like to play..."
         self.choose_instructions_label = Label(self.intro_frame,
                                                text=choose_instructions_txt,
-                                               wraplength=300, justify="left")
+                                               wraplength=300,
+                                               justify="left")
         self.choose_instructions_label.grid(row=1)
 
         # Rounds buttons...
