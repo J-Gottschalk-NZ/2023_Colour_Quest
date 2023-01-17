@@ -118,11 +118,20 @@ class Play:
         self.control_frame = Frame(self.quest_frame)
         self.control_frame.grid(row=6)
 
-        
+        control_buttons = [
+            ["#CC6600", "Help", "get help"],
+            ["#004C99", "Statistics", "get stats"],
+            ["#808080", "Start Over", "start over"]
+        ]
 
-        self.start_over_button = Button(self.control_frame, text="Start Over",
-                                        command=self.close_play)
-        self.start_over_button.grid(row=0, column=2)
+        for item in range(0, 3):
+            self.make_control_button = Button(self.control_frame,
+                                              fg="#FFFFFF",
+                                              bg=control_buttons[item][0],
+                                              text=control_buttons[item][1],
+                                              width=11, font=("Arial", "12", "bold"),
+                                              command=lambda i=item: self.to_do(control_buttons[i][2]))
+            self.make_control_button.grid(row=0, column=item, padx=5, pady=5)
 
     # retrieve colours from csv file
     def get_all_colours(self):
@@ -158,6 +167,17 @@ class Play:
 
     def to_compare(self, user_score):
         print("Your score is", user_score)
+
+    # Detects which 'control' button was pressed and
+    # invokes necessary function.  Can possibly replace functions
+    # with calls to classes in this section!
+    def to_do(self, action):
+        if action == "get help":
+            self.get_help()
+        elif action == "get stats":
+            self.get_stats()
+        else:
+            self.close_play()
 
     def get_stats(self):
         print("You chose to get the statistics")
