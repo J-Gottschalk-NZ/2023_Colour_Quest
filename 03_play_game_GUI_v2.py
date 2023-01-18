@@ -72,6 +72,8 @@ class Play:
         self.choice_frame = Frame(self.quest_frame)
         self.choice_frame.grid(row=2)
 
+        # list to hold references for coloured buttons
+        # so that they can be configured for new rounds etc
         self.choice_button_ref = []
 
         for item in range(0, 6):
@@ -128,6 +130,11 @@ class Play:
             ["#808080", "Start Over", "start over"]
         ]
 
+        # list to hold references for control buttons
+        # so that the text of the 'start over' button
+        # can easily be configured when the game is over
+        self.control_button_ref = []
+
         for item in range(0, 3):
             self.make_control_button = Button(self.control_frame,
                                               fg="#FFFFFF",
@@ -136,6 +143,9 @@ class Play:
                                               width=11, font=("Arial", "12", "bold"),
                                               command=lambda i=item: self.to_do(control_buttons[i][2]))
             self.make_control_button.grid(row=0, column=item, padx=5, pady=5)
+
+            # Add buttons to control list
+            self.control_button_ref.append(self.make_control_button)
 
     # retrieve colours from csv file
     def get_all_colours(self):
@@ -169,7 +179,11 @@ class Play:
 
         return round_colour_list
 
+    # work out who won and if the game is over
+    # update win / loss lables and buttons
     def to_compare(self, user_choice):
+
+        how_many = self.rounds_wanted.get()
 
         # Add one to number of rounds played
         current_round = self.rounds_played.get()
@@ -179,9 +193,6 @@ class Play:
         # deactivate colour buttons!
         for item in self.choice_button_ref:
             item.config(state=DISABLED)
-
-        # enable next round button
-        self.next_button.config(state=NORMAL)
 
         # set up background colours...
         win_colour = "#D5E8D4"
@@ -219,40 +230,53 @@ class Play:
 
         rounds_outcome_txt = "Round {}: User {} \t" \
                              "Computer: {}".format(current_round,
-                                                   user_score_current, comp_score_current)
+                                                   user_score_current,
+                                                   comp_score_current)
 
         self.round_results_label.config(bg=round_results_bg,
                                         text=rounds_outcome_txt)
 
-        # find total scores...
-        print(self.user_scores)
+        # get total scores for user and computer...
         user_total = sum(self.user_scores)
         comp_total = sum(self.computer_scores)
 
         if user_total > comp_total:
             self.game_results_label.config(bg=win_colour)
+            status = "You Win!"
         else:
             self.game_results_label.config(bg=lose_colour)
+            status = "You Lose!"
 
         game_outcome_txt = "Total Score: User {} \t" \
                            "Computer: {}".format(user_total,
                                                  comp_total)
         self.game_results_label.config(text=game_outcome_txt)
 
-    # sets up new round when 'next' button is pressed
-    def new_round(self):
-
         # if the game is over, disable all buttons
-        # and change text of 'next' button to 'game over'
-        current_round = self.rounds_played.get()
-        how_many = self.rounds_wanted.get()
+        # and change text of 'next' button to either
+        # 'You Win' or 'You Lose' and disable all buttons
 
         if current_round == how_many:
+            # Change 'next' button to show overall
+            # win / loss result and disable it
             self.next_button.config(state=DISABLED,
-                                    text="Game Over!")
+                                    text=status)
 
-            # End function by returning 'None'
-            return None
+            # update 'start over button'
+            start_over_button = self.control_button_ref[2]
+            start_over_button['text'] = "Play Again"
+            start_over_button['bg'] = "#009900"
+
+            # change all colour button background to light grey
+            for item in self.choice_button_ref:
+                item['bg'] = "#C0C0C0"
+
+        else:
+            # enable next round button and update heading
+            self.next_button.config(state=NORMAL)
+
+    # sets up new round when 'next' button is pressed
+    def new_round(self):
 
         # empty button list so we can get new colours
         self.button_colours_list.clear()
@@ -270,6 +294,10 @@ class Play:
 
             count += 1
 
+        # retrieve number of rounds wanted / played
+        # and update heading.
+        how_many = self.rounds_wanted.get()
+        current_round = self.rounds_played.get()
         new_heading = "Choose - Round {} of " \
                       "{}".format(current_round + 1, how_many)
         self.choose_heading.config(text=new_heading)
