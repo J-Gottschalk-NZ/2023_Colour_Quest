@@ -80,8 +80,6 @@ class DisplayStats:
         # setup dialogue box and background colour
         self.stats_box = Toplevel()
 
-        stats_bg_colour = "#DAE8FC"
-
         # disable help button
         partner.to_stats_btn.config(state=DISABLED)
 
@@ -91,22 +89,21 @@ class DisplayStats:
                                 partial(self.close_stats, partner))
 
         self.stats_frame = Frame(self.stats_box, width=300,
-                                 height=200, bg=stats_bg_colour)
+                                 height=200)
         self.stats_frame.grid()
 
         self.help_heading_label = Label(self.stats_frame,
                                         text="Statistics",
-                                        font=("Arial", "14", "bold"),
-                                        bg=stats_bg_colour)
+                                        font=("Arial", "14", "bold"))
         self.help_heading_label.grid(row=0)
 
         stats_text = "Here are your game statistics"
         self.help_text_label = Label(self.stats_frame, text=stats_text, wraplength=350,
-                                     justify="left", bg=stats_bg_colour)
+                                     justify="left")
         self.help_text_label.grid(row=1, padx=10)
 
         # frame to hold statistics 'table'
-        self.data_frame = Frame(self.stats_frame, bg=stats_bg_colour)
+        self.data_frame = Frame(self.stats_frame)
         self.data_frame.grid(row=2, padx=10, pady=10)
 
         # get statistics for user and computer
@@ -114,28 +111,35 @@ class DisplayStats:
         self.comp_stats = self.get_stats(computer_scores)
 
         # Create labels and place statistics in correct label.
-        large_font = ("Arial", "11")
-        regular_font = ("Arial", "10")
-        head_back = "#FFFFFF"
-        odd_rows = "#C9D6E8"
-        even_rows = stats_bg_colour
+        bold_font = ("Arial", "12", "bold")
+        regular_font = ("Arial", "12")
 
-        all_labels = [
-            ["", regular_font, stats_bg_colour], ["User", large_font, head_back], ["Computer", large_font, head_back],
-            ["Total", regular_font, odd_rows], [20, regular_font, odd_rows], [30, regular_font, odd_rows],
-            ["Best", regular_font, even_rows], [20, regular_font, even_rows], [30, regular_font, even_rows],
-            ["Worst", regular_font, odd_rows], [20, regular_font, odd_rows], [30, regular_font, odd_rows],
-            ["Average", regular_font, even_rows], [20, regular_font, even_rows], [30, regular_font, even_rows],
+        # Fake, hard coded data for now...
+        all_data = [["", "User", "Computer"],
+                    ["Total", 20, 30],
+                    ["Best", 7, 15],
+                    ["Worst", 0, 4],
+                    ["Average", 7, 8]
+                    ]
+
+        all_formats = [
+            [bold_font, bold_font, bold_font],
+            [bold_font, regular_font, regular_font],
+            [bold_font, regular_font, regular_font],
+            [bold_font, regular_font, regular_font],
+            [bold_font, regular_font, regular_font],
         ]
 
-        for item in range(0, len(all_labels)):
-            self.data_label = Label(self.data_frame, text=all_labels[item][0],
-                                    bg=all_labels[item][2],
-                                    width="10", height="2"
-                                    )
-            self.data_label.grid(row=item // 3,
-                                 column=item % 3,
-                                 padx=0, pady=0)
+        total_rows = len(all_data)
+        total_cols = len(all_data[0])
+
+        for i in range(total_rows):
+            for j in range(total_cols):
+                self.data_label = Label(self.data_frame, width=15, height=2,
+                                        borderwidth=1, relief="solid")
+                self.data_label.grid(row=i, column=j)
+                self.data_label.config(text=all_data[i][j], font=all_formats[i][j])
+
         self.dismiss_button = Button(self.stats_frame,
                                      font=("Arial", "12", "bold"),
                                      text="Dismiss", bg="#CC6600",
