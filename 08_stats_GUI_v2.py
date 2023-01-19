@@ -104,7 +104,7 @@ class DisplayStats:
 
         # frame to hold statistics 'table'
         self.data_frame = Frame(self.stats_frame)
-        self.data_frame.grid(row=2)
+        self.data_frame.grid(row=2, padx=10, pady=10)
 
         # get statistics for user and computer
         self.user_stats = self.get_stats(user_scores)
@@ -114,20 +114,24 @@ class DisplayStats:
         bold_font = ("Arial", "12", "bold")
         regular_font = ("Arial", "12")
 
-        all_labels = [
-            ["", regular_font], ["User", bold_font], ["Computer", bold_font],
-            ["Total", bold_font], [20, regular_font], [30, regular_font]
-        ]
+        # Fake, hard coded data for now...
+        all_data = [("", "User", "Computer"),
+                    ("Total", 20, 30),
+                    ("Best", 7, 15),
+                    ("Worst", 0, 4),
+                    ("Average", 7, 8)
+                    ]
 
-        for item in range(0, 6):
-            self.data_label = Label(self.data_frame, text=all_labels[item][0],
-                                    font=all_labels[item][1],
-                                    borderwidth=1, relief="solid",
-                                    width="30"
-                                    )
-            self.data_label.grid(row=item // 3,
-                                 column=item % 3,
-                                 padx=0, pady=0)
+        total_rows = len(all_data)
+        total_cols = len(all_data[0])
+
+        for i in range(total_rows):
+            for j in range(total_cols):
+
+                self.data_label = Entry(self.data_frame, width=10)
+                self.data_label.grid(row=i, column=j)
+                self.data_label.insert(END, all_data[i][j])
+
         self.dismiss_button = Button(self.stats_frame,
                                      font=("Arial", "12", "bold"),
                                      text="Dismiss", bg="#CC6600",
