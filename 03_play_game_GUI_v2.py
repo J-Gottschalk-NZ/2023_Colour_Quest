@@ -179,6 +179,37 @@ class Play:
 
         return round_colour_list
 
+    # sets up new round when 'next' button is pressed
+    def new_round(self):
+
+        # disable next button (renable it at the end
+        # of the round)
+        self.next_button.config(state=DISABLED)
+
+        # empty button list so we can get new colours
+        self.button_colours_list.clear()
+
+        # get new colours for buttons
+        self.button_colours_list = self.get_round_colors()
+
+        # set button bg, fg and text
+        count = 0
+        for item in self.choice_button_ref:
+            item['fg'] = self.button_colours_list[count][2]
+            item['bg'] = self.button_colours_list[count][0]
+            item['text'] = self.button_colours_list[count][0]
+            item['state'] = NORMAL
+
+            count += 1
+
+        # retrieve number of rounds wanted / played
+        # and update heading.
+        how_many = self.rounds_wanted.get()
+        current_round = self.rounds_played.get()
+        new_heading = "Choose - Round {} of " \
+                      "{}".format(current_round + 1, how_many)
+        self.choose_heading.config(text=new_heading)
+
     # work out who won and if the game is over
     # update win / loss lables and buttons
     def to_compare(self, user_choice):
@@ -213,7 +244,7 @@ class Play:
         comp_choice = random.choice(self.button_colours_list)
         comp_score_current = int(comp_choice[1])
 
-        self.computer_scores.append(int(comp_score_current))
+        self.computer_scores.append(comp_score_current)
 
         comp_announce = "The computer " \
                         "chose {}".format(comp_choice[0])
@@ -274,33 +305,6 @@ class Play:
         else:
             # enable next round button and update heading
             self.next_button.config(state=NORMAL)
-
-    # sets up new round when 'next' button is pressed
-    def new_round(self):
-
-        # empty button list so we can get new colours
-        self.button_colours_list.clear()
-
-        # get new colours for buttons
-        self.button_colours_list = self.get_round_colors()
-
-        # set button bg, fg and text
-        count = 0
-        for item in self.choice_button_ref:
-            item['fg'] = self.button_colours_list[count][2]
-            item['bg'] = self.button_colours_list[count][0]
-            item['text'] = self.button_colours_list[count][0]
-            item['state'] = NORMAL
-
-            count += 1
-
-        # retrieve number of rounds wanted / played
-        # and update heading.
-        how_many = self.rounds_wanted.get()
-        current_round = self.rounds_played.get()
-        new_heading = "Choose - Round {} of " \
-                      "{}".format(current_round + 1, how_many)
-        self.choose_heading.config(text=new_heading)
 
     # Detects which 'control' button was pressed and
     # invokes necessary function.  Can possibly replace functions
